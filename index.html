@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#155e57">
+<meta name="description" content="Timely helps you book the right appointment and spend less time in the waiting room.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Timely">
+<title>Timely — Patient appointment MVP</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 32 32" width="28" height="28" fill="none" aria-label="Timely logo">
+      <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2.5"/>
+      <path d="M16 9v7l5 3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="25.5" cy="6.5" r="3" fill="var(--accent-warm)"/>
+    </svg>
+    <span class="brand-name">Timely</span>
+    <span class="tag">MVP prototype</span>
+  </div>
+  <nav class="view-tabs" aria-label="Switch view">
+    <button class="tab active" data-view="patient">Patient</button>
+    <button class="tab" data-view="console">Practice</button>
+  </nav>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+
+<main class="stage">
+  <!-- PATIENT VIEW -->
+  <section class="patient-col" id="patientCol" aria-label="Patient view">
+    <p class="col-label">What the patient sees <span>(installable web app)</span></p>
+    <div class="phone">
+      <div class="phone-status"><span id="phoneClock">10:20</span><span>Timely · Dr. Hoffmann practice</span></div>
+      <div class="phone-screen" id="screen"></div>
+      <div class="sms-drawer" id="smsDrawer" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- PRACTICE CONSOLE -->
+  <section class="console-col" id="consoleCol" aria-label="Practice console">
+    <p class="col-label">Practice side <span>(simulates the live data from the practice software)</span></p>
+
+    <div class="panel clock-panel">
+      <div>
+        <div class="eyebrow">Simulated time</div>
+        <div class="big-time" id="simClock">10:20</div>
+      </div>
+      <div class="clock-controls">
+        <button class="btn btn-ghost" id="playBtn">▶ Play</button>
+        <button class="btn btn-ghost" data-skip="5">+5 min</button>
+        <button class="btn btn-ghost" data-skip="15">+15 min</button>
+        <button class="btn btn-ghost" id="resetBtn">Reset</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Current delay</h2>
+        <span class="delay-pill" id="delayPill">On time</span>
+      </div>
+      <div class="delay-row">
+        <input type="range" id="delaySlider" min="0" max="60" step="5" value="0" aria-label="Current delay in minutes">
+        <output id="delayOut">0 min</output>
+      </div>
+      <div class="event-buttons">
+        <button class="btn btn-soft" data-event="emergency">Emergency walk-in <b>+20</b></button>
+        <button class="btn btn-soft" data-event="overrun">Consultation overran <b>+10</b></button>
+        <button class="btn btn-soft" data-event="noshow">No-show / cancellation <b>−15</b></button>
+      </div>
+      <p class="hint">In the real product, the delay comes from the practice software's real-time status (check-in, treatment started, treatment finished). No one updates it by hand.</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>Today's queue · Dr. Hoffmann</h2></div>
+      <ol class="queue" id="queue"></ol>
+      <div class="console-actions" id="consoleActions"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>Appointment type rules</h2><span class="muted small">What each type triggers internally</span></div>
+      <div class="table-wrap"><table class="rules" id="rulesTable"></table></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>Notification rules (MVP)</h2></div>
+      <ul class="rule-list">
+        <li><b>Confirmation</b> by text message with a personal status link, sent right after booking.</li>
+        <li><b>Running late</b>: sent before arrival whenever the delay changes by 10 min or more, including the earliest sensible arrival time.</li>
+        <li><b>Coffee suggestion</b>: shown after check-in if the expected wait is 20 min or more.</li>
+        <li><b>Come back now</b>: sent 10 min before the <i>earliest</i> expected start. If the delay shrinks, it goes out sooner, so it errs on the early side.</li>
+        <li>Times are always shown as a <b>range</b>, never as an exact minute.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="src/app/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "timely-patient-mvp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Timely patient appointment MVP — guided booking and live wait updates",
+  "scripts": {
+    "test": "node --test tests/**/*.test.js",
+    "start": "npx.cmd --yes serve -l 5188 ."
+  }
+}
